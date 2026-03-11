@@ -1,0 +1,121 @@
+# Default configuration for red teaming experiments
+
+# Data configuration
+data:
+  dataset: "iris"  # "iris" or "synthetic"
+  test_size: 0.3
+  random_state: 42
+  scale_features: true
+  
+  # Synthetic data parameters (if dataset="synthetic")
+  synthetic:
+    n_samples: 1000
+    n_features: 20
+    n_informative: 10
+    n_redundant: 5
+    n_classes: 3
+    n_clusters_per_class: 1
+
+# Model configuration
+models:
+  - name: "random_forest"
+    type: "random_forest"
+    params:
+      n_estimators: 100
+      max_depth: null
+      random_state: 42
+  
+  - name: "logistic_regression"
+    type: "logistic_regression"
+    params:
+      max_iter: 1000
+      random_state: 42
+  
+  - name: "neural_network"
+    type: "neural_network"
+    params:
+      input_dim: 4  # Will be updated based on dataset
+      hidden_dims: [64, 32]
+      num_classes: 3  # Will be updated based on dataset
+      dropout_rate: 0.2
+      learning_rate: 0.001
+      epochs: 100
+      device: null  # Auto-detect
+
+# Attack configuration
+attacks:
+  - name: "gaussian_noise"
+    type: "gaussian"
+    epsilon: 0.1
+  
+  - name: "uniform_noise"
+    type: "uniform"
+    epsilon: 0.1
+  
+  - name: "fgsm_like"
+    type: "fgsm_like"
+    epsilon: 0.1
+  
+  # PyTorch attacks (for neural networks)
+  - name: "fgsm"
+    type: "fgsm"
+    epsilon: 0.1
+  
+  - name: "pgd"
+    type: "pgd"
+    epsilon: 0.1
+    alpha: 0.025
+    steps: 10
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "precision_macro"
+    - "recall_macro"
+    - "f1_macro"
+    - "confusion_matrix"
+  
+  calibration:
+    n_bins: 10
+  
+  robustness:
+    perturbation_metrics: true
+    attack_success_rate: true
+
+# Visualization configuration
+visualization:
+  output_dir: "assets"
+  save_plots: true
+  plot_format: "png"
+  dpi: 300
+  
+  plots:
+    - "accuracy_comparison"
+    - "perturbation_analysis"
+    - "confusion_matrices"
+    - "calibration_curve"
+    - "robustness_curves"
+
+# Experiment configuration
+experiment:
+  name: "red_teaming_experiment"
+  output_dir: "experiments"
+  save_results: true
+  verbose: true
+  
+  # Reproducibility
+  seed: 42
+  
+  # Logging
+  log_level: "INFO"
+  log_file: "experiment.log"
+
+# Demo configuration
+demo:
+  streamlit:
+    port: 8501
+    host: "localhost"
+  
+  sample_size: 100
+  interactive_plots: true
